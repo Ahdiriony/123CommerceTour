@@ -1,5 +1,9 @@
-/log
-/temp
-/bin/
-!/bin/custom
-/roles
+/data/*
+/log/*
+/temp/*
+/config/*
+!/config/local.properties
+!/config/localextensions.xml
+/bin/*
+!/bin/custom/
+/bin/custom/*/target/

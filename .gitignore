@@ -1,8 +1,36 @@
-/log
-/temp
-/bin/
-!/bin/custom
-/roles
+# Folders to ignore, whatever the place they are
+ 
+.metadata
+classes
+hybris/bin/**/bin
+gensrc
+ 
+# Folders to ignore at the root of the repository
+log/
+temp/
+data/
+licenses/
+hybris/sampleconfigurations/
+
+  
+# filter only custom extension
+bin/*
+!bin/custom/
+
+# Filename patterns to ignore
+*.class
+build.xml
+Generated*.java
+platformhome.properties
+*testclasses.xml
+extensioninfo.xsd
+*hmc.jar
+hmc.xsd
+items.xsd
+beans.xsd
+ruleset.xml
+*.log
+base.properties
 
 /.idea
 /idea-module-files

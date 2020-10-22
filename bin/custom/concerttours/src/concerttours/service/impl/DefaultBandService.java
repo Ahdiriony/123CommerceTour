@@ -5,7 +5,6 @@ import concerttours.model.BandModel;
 import concerttours.service.BandService;
 import de.hybris.platform.servicelayer.exceptions.AmbiguousIdentifierException;
 import de.hybris.platform.servicelayer.exceptions.UnknownIdentifierException;
-import org.springframework.beans.factory.annotation.Required;
 
 import java.util.List;
 
@@ -13,6 +12,15 @@ import java.util.List;
 public class DefaultBandService implements BandService
 {
 	private BandDAO bandDAO;
+
+	/**
+	 *
+	 * @param bandDAO is required, constructor injection is replace for deprecated {@link @Required}
+	 */
+	public DefaultBandService(final BandDAO bandDAO)
+	{
+		this.bandDAO = bandDAO;
+	}
 
 	/**
 	 * Gets all bands by delegating to {@link BandDAO#findBands()}.
@@ -40,11 +48,5 @@ public class DefaultBandService implements BandService
 			throw new AmbiguousIdentifierException("Band code '" + code + "' is not unique, " + result.size() + " bands found!");
 		}
 		return result.get(0);
-	}
-
-	@Required
-	public void setBandDAO(final BandDAO bandDAO)
-	{
-		this.bandDAO = bandDAO;
 	}
 }

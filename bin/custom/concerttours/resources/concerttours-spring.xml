@@ -30,7 +30,7 @@
 
     <alias name="defaultBandService" alias="bandService"/>
     <bean id="defaultBandService" class="concerttours.service.impl.DefaultBandService">
-        <property name="bandDAO" ref="bandDAO"/>
+        <constructor-arg name="bandDAO" ref="bandDAO"/>
     </bean>
 
 </beans>

@@ -11,8 +11,8 @@
 
     <enumtypes>
         <enumtype code="ConcertType" autocreate="true" generate="true" dynamic="false">
-            <value code="openair" />
-            <value code="indoor" />
+            <value code="openair"/>
+            <value code="indoor"/>
         </enumtype>
 
         <enumtype code="MusicType" autocreate="true" generate="true" dynamic="true">
@@ -111,6 +111,10 @@
                 <attribute qualifier="concertType" type="ConcertType">
                     <description>type of concert (indoors or open air)</description>
                     <persistence type="property"/>
+                </attribute>
+                <attribute qualifier="daysUntil" type="java.lang.Long">
+                    <persistence type="dynamic" attributeHandler="concertDaysUntilAttributeHandler"/>
+                    <modifiers read="true" write="false"/>
                 </attribute>
             </attributes>
         </itemtype>

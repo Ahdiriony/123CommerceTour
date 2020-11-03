@@ -13,6 +13,7 @@ Tour Details for ${tour.tourName}
         <th>Venue</th>
         <th></th>
         <th>Date</th>
+        <th>Days Until</th>
     </tr>
     <c:forEach var="concert" items="${tour.concerts}">
         <tr>

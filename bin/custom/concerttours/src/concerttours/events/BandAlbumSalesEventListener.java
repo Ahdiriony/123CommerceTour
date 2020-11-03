@@ -1,13 +1,15 @@
 package concerttours.events;
 
 import concerttours.model.NewsModel;
+import de.hybris.platform.servicelayer.event.ClusterAwareEvent;
+import de.hybris.platform.servicelayer.event.PublishEventContext;
 import de.hybris.platform.servicelayer.event.impl.AbstractEventListener;
 import de.hybris.platform.servicelayer.model.ModelService;
 
 import java.util.Date;
 
 
-public class BandAlbumSalesEventListener extends AbstractEventListener<BandAlbumSalesEvent>
+public class BandAlbumSalesEventListener extends AbstractEventListener<BandAlbumSalesEvent> implements ClusterAwareEvent
 {
 	private static final String BAND_SALES_HEADLINE = "%s album sales exceed 50000";
 	private static final String BAND_SALES_CONTENT = "%s album sales reported as %d";
@@ -38,5 +40,9 @@ public class BandAlbumSalesEventListener extends AbstractEventListener<BandAlbum
 		this.modelService = modelService;
 	}
 
-
+	@Override
+	public boolean canPublish(PublishEventContext publishEventContext)
+	{
+		return publishEventContext.getSourceNodeId() == publishEventContext.getTargetNodeId();
+	}
 }

@@ -3,6 +3,7 @@
 .metadata
 classes
 hybris/bin/**/bin
+hybris/bin/custom/**/eclipsebin
 gensrc
  
 # Folders to ignore at the root of the repository
@@ -17,6 +18,7 @@ hybris/sampleconfigurations/
 bin/*
 !bin/custom/
 
+*bin/
 # Filename patterns to ignore
 *.class
 build.xml

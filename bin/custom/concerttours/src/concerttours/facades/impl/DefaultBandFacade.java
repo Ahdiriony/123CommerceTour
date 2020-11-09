@@ -9,6 +9,7 @@ import concerttours.service.BandService;
 import de.hybris.platform.core.model.media.MediaContainerModel;
 import de.hybris.platform.core.model.media.MediaFormatModel;
 import de.hybris.platform.core.model.product.ProductModel;
+import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.media.MediaService;
 import org.springframework.beans.factory.annotation.Required;
 
@@ -19,24 +20,30 @@ import java.util.Locale;
 
 public class DefaultBandFacade implements BandFacade
 {
+	private static final String BAND_LIST_FORMAT = "band.list.format.name";
+	private static final String BAND_DETAIL_FORMAT = "band.detail.format.name";
+
 	private BandService bandService;
 	private MediaService mediaService;
+	private ConfigurationService configService;
 
 	@Override
 	public List<BandData> getBands()
 	{
 		final List<BandModel> bandModels = bandService.getBands();
 		final List<BandData> bandFacadeData = new ArrayList<>();
-		final MediaFormatModel format = mediaService.getFormat("bandList");
-		for (final BandModel sm : bandModels)
+		if (bandModels != null && !bandModels.isEmpty())
 		{
-			final BandData sfd = new BandData();
-			sfd.setId(sm.getCode());
-			sfd.setName(sm.getName());
-			sfd.setDescription(sm.getHistory());
-			sfd.setAlbumsSold(sm.getAlbumSales());
-			sfd.setImageURL(getImageURL(sm, format));
-			bandFacadeData.add(sfd);
+			final String mediaFormatName = configService.getConfiguration().getString(BAND_LIST_FORMAT);
+			System.out.println("mediaFormatName:" + mediaFormatName);
+			final MediaFormatModel format = mediaService.getFormat(mediaFormatName);
+			for (final BandModel sm : bandModels)
+			{
+				final BandData sfd = new BandData();
+				populateBandData(sfd, sm);
+				sfd.setImageURL(getImageURL(sm, format));
+				bandFacadeData.add(sfd);
+			}
 		}
 		return bandFacadeData;
 	}
@@ -53,7 +60,6 @@ public class DefaultBandFacade implements BandFacade
 		{
 			return null;
 		}
-
 		// Create a list of genres
 		final List<String> genres = new ArrayList<>();
 		if (band.getTypes() != null)
@@ -63,7 +69,7 @@ public class DefaultBandFacade implements BandFacade
 				genres.add(musicType.getCode());
 			}
 		}
-		// Create a list of TourSummaryData from the matches
+		// Create a list of TourSummaryData
 		final List<TourSummaryData> tourHistory = new ArrayList<>();
 		if (band.getTours() != null)
 		{
@@ -78,16 +84,22 @@ public class DefaultBandFacade implements BandFacade
 			}
 		}
 		// Now we can create the BandData transfer object
-		final MediaFormatModel format = mediaService.getFormat("bandDetail");
+		final String mediaFormatName = configService.getConfiguration().getString(BAND_DETAIL_FORMAT);
+		final MediaFormatModel format = mediaService.getFormat(mediaFormatName);
 		final BandData bandData = new BandData();
-		bandData.setId(band.getCode());
-		bandData.setName(band.getName());
-		bandData.setAlbumsSold(band.getAlbumSales());
-		bandData.setDescription(band.getHistory());
+		populateBandData(bandData, band);
+		bandData.setImageURL(getImageURL(band, format));
 		bandData.setGenres(genres);
 		bandData.setTours(tourHistory);
-		bandData.setImageURL(getImageURL(band, format));
 		return bandData;
+	}
+
+	private void populateBandData(BandData data, BandModel model)
+	{
+		data.setId(model.getCode());
+		data.setName(model.getName());
+		data.setAlbumsSold(model.getAlbumSales());
+		data.setDescription(model.getHistory(Locale.ENGLISH));
 	}
 
 	protected String getImageURL(final BandModel sm, final MediaFormatModel format)
@@ -101,14 +113,20 @@ public class DefaultBandFacade implements BandFacade
 	}
 
 	@Required
-	public void setMediaService(MediaService mediaService)
+	public void setBandService(final BandService bandService)
+	{
+		this.bandService = bandService;
+	}
+
+	@Required
+	public void setMediaService(final MediaService mediaService)
 	{
 		this.mediaService = mediaService;
 	}
 
 	@Required
-	public void setBandService(final BandService bandService)
+	public void setConfigurationService(final ConfigurationService configService)
 	{
-		this.bandService = bandService;
+		this.configService = configService;
 	}
 }

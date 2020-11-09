@@ -20,7 +20,7 @@ import java.util.Locale;
 
 public class DefaultBandFacade implements BandFacade
 {
-	private static final String BAND_LIST_FORMAT = "band.list.format.name";
+	public static final String BAND_LIST_FORMAT = "band.list.format.name";
 	private static final String BAND_DETAIL_FORMAT = "band.detail.format.name";
 
 	private BandService bandService;
